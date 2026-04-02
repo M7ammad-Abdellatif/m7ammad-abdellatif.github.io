@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mohammad — AI & Data Science</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">MO<span class="accent">.</span></a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" id="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-content">
+      <span class="hero-eyebrow mono">AI &amp; Data Science Graduate</span>
+      <h1 class="hero-name">Mohammad Abdellatif</h1>
+      <p class="hero-tagline">
+        I use AI and data to solve real problems.<br />
+        <span class="accent">From raw data to real decisions.</span>
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">View My Work</a>
+        <a href="#contact" class="btn btn-outline">Contact Me</a>
+      </div>
+    </div>
+    
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section class="section about" id="about">
+    <div class="container">
+      <div class="section-label mono reveal">01 — About</div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <h2 class="section-heading">I like knowing how things work.</h2>
+          <p>
+            I'm an AI & Data Science graduate from HTU. I'm drawn not just to 
+            building models that score well, but to building ones that actually work in the real world.
+          </p>
+
+          <p>
+            Whether it's cleaning a messy dataset at 2am or breaking down a complex problem,
+            what keeps me engaged is the process of understanding something 
+            deeply and testing ideas until they work.
+          </p>
+
+          <p>
+            Right now I'm looking for an environment where I can do real work, 
+            be around people who take their craft seriously, and keep getting better.
+          </p>
+        </div>
+        <div class="about-stats reveal">
+          <div class="stat-card">
+            <span class="stat-number accent">3+</span>
+            <span class="stat-label mono">Years Learning & Building</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number accent">20+</span>
+            <span class="stat-label mono">Technical Projects Built</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number accent">Applied AI</span>
+            <span class="stat-label mono">ML, NLP & Analytics</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number accent">∞</span>
+            <span class="stat-label mono">Always Learning, Never Satisfied</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROJECTS ===================== -->
+  <section class="section projects" id="projects">
+    <div class="container">
+      <div class="section-label mono reveal">02 — Projects</div>
+      <h2 class="section-heading reveal">Work that speaks.</h2>
+      <div class="projects-grid">
+
+        <!-- Project 1 -->
+        <article class="project-card reveal">
+          <div class="project-top">
+            <span class="project-number mono">01</span>
+            <div class="project-tags">
+              <span class="tag">AI</span>
+              <span class="tag">NLP</span>
+            </div>
+          </div>
+          <h3 class="project-title">SentimentScope</h3>
+          <p class="project-desc">
+            Fine-tuned a BERT-based transformer model on Arabic and English social media data
+            to classify sentiment in mixed-language posts. Addressed the unique challenge of
+            code-switching in Jordanian Arabic dialect — a gap in most existing NLP tools.
+          </p>
+          <div class="project-tools">
+            <span class="mono tool">Python</span>
+            <span class="mono tool">HuggingFace</span>
+            <span class="mono tool">PyTorch</span>
+            <span class="mono tool">FastAPI</span>
+          </div>
+          <div class="project-result">
+            <span class="mono accent">→</span>
+            <span>89% accuracy on held-out test set; deployed as a REST API</span>
+          </div>
+          <a href="#" class="project-link mono">View Project ↗</a>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project-card reveal">
+          <div class="project-top">
+            <span class="project-number mono">02</span>
+            <div class="project-tags">
+              <span class="tag">Data</span>
+              <span class="tag">Analysis</span>
+            </div>
+          </div>
+          <h3 class="project-title">JobMarket Pulse</h3>
+          <p class="project-desc">
+            Scraped and analyzed 15,000+ tech job listings from the MENA region to uncover
+            demand patterns for AI and data roles. Built an interactive dashboard revealing
+            skill gaps between what universities teach and what the market actually needs.
+          </p>
+          <div class="project-tools">
+            <span class="mono tool">Python</span>
+            <span class="mono tool">Pandas</span>
+            <span class="mono tool">Plotly</span>
+            <span class="mono tool">BeautifulSoup</span>
+          </div>
+          <div class="project-result">
+            <span class="mono accent">→</span>
+            <span>Presented to 3 university faculty members; influenced course update discussion</span>
+          </div>
+          <a href="#" class="project-link mono">View Project ↗</a>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="project-card reveal">
+          <div class="project-top">
+            <span class="project-number mono">03</span>
+            <div class="project-tags">
+              <span class="tag">ML</span>
+              <span class="tag">Real-World</span>
+            </div>
+          </div>
+          <h3 class="project-title">SmartSched</h3>
+          <p class="project-desc">
+            Built a constraint-based scheduling optimizer for university course registration
+            that reduces conflicts and maximizes student preferences. Used a genetic algorithm
+            approach combined with a simple web interface for easy input.
+          </p>
+          <div class="project-tools">
+            <span class="mono tool">Python</span>
+            <span class="mono tool">DEAP</span>
+            <span class="mono tool">Flask</span>
+            <span class="mono tool">SQLite</span>
+          </div>
+          <div class="project-result">
+            <span class="mono accent">→</span>
+            <span>Reduced scheduling conflicts by 74% vs. manual process in pilot test</span>
+          </div>
+          <a href="#" class="project-link mono">View Project ↗</a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SKILLS ===================== -->
+  <section class="section skills" id="skills">
+    <div class="container">
+      <div class="section-label mono reveal">03 — Skills</div>
+      <h2 class="section-heading reveal">Tools of the trade.</h2>
+      <div class="skills-grid">
+
+        <div class="skill-group reveal">
+          <h3 class="skill-group-title mono">Programming</h3>
+          <ul class="skill-list">
+            <li class="skill-item"><span class="skill-dot"></span>Python</li>
+            <li class="skill-item"><span class="skill-dot"></span>Java</li>
+            <li class="skill-item"><span class="skill-dot"></span>R</li>
+            <li class="skill-item"><span class="skill-dot"></span>MySQL</li>
+          </ul>
+        </div>
+
+        <div class="skill-group reveal">
+          <h3 class="skill-group-title mono">Data &amp; AI</h3>
+          <ul class="skill-list">
+            <li class="skill-item"><span class="skill-dot"></span>Data Analysis</li>
+            <li class="skill-item"><span class="skill-dot"></span>Data Visualization</li>
+            <li class="skill-item"><span class="skill-dot"></span>Machine Learning</li>
+            <li class="skill-item"><span class="skill-dot"></span>Deep Learning</li>
+            <li class="skill-item"><span class="skill-dot"></span>Applied NLP</li>
+          </ul>
+        </div>
+
+        <div class="skill-group reveal">
+          <h3 class="skill-group-title mono">Libraries</h3>
+          <ul class="skill-list">
+            <li class="skill-item"><span class="skill-dot"></span>Pandas / NumPy</li>
+            <li class="skill-item"><span class="skill-dot"></span>scikit-learn</li>
+            <li class="skill-item"><span class="skill-dot"></span>Matplotlib / Plotly</li>
+            <li class="skill-item"><span class="skill-dot"></span>PyTorch / TensorFlow</li>
+          </ul>
+        </div>
+
+        <div class="skill-group reveal">
+          <h3 class="skill-group-title mono">Tools &amp; Platforms</h3>
+          <ul class="skill-list">
+            <li class="skill-item"><span class="skill-dot"></span>Google Colab</li>
+            <li class="skill-item"><span class="skill-dot"></span>VS Code</li>
+            <li class="skill-item"><span class="skill-dot"></span>Jupyter Notebooks</li>                                
+            <li class="skill-item"><span class="skill-dot"></span>Power BI</span></li>
+            <li class="skill-item"><span class="skill-dot"></span>Roboflow</span></li>
+            <li class="skill-item"><span class="skill-dot"></span>Git &amp; GitHub <span></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <div class="section-label mono reveal">04 — Contact</div>
+      <div class="contact-inner reveal">
+        <h2 class="section-heading">Let's connect.</h2>
+        <p class="contact-sub">
+          I’m open to full-time opportunities and conversations around AI, data, and real-world problem solving.
+          Reach out — I’d be glad to connect.
+        </p>
+        <div class="contact-links">
+
+          <a href="mailto:mohammadabdellatif2003@gmail.com" class="contact-item">
+            <span class="mono contact-label">Email</span>
+            <span class="contact-value">MohammadAbdellatif2003@gmail.com</span>
+            <span class="contact-arrow">↗</span>
+          </a>
+
+          <a href="https://www.linkedin.com/in/mohammad-abdellatif-753178259" target="_blank" class="contact-item">
+            <span class="mono contact-label">LinkedIn</span>
+            <span class="contact-value">Mohammad Abdellatif</span>
+            <span class="contact-arrow">↗</span>
+          </a>
+
+          <a href="./assets/Mohammad_Abdellatif_Resume.pdf" download="Mohammad_Abdellatif_Resume.pdf" class="contact-item">
+            <span class="mono contact-label">Resume</span>
+            <span class="contact-value">Download CV</span>
+            <span class="contact-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="mono">Mohammad Abdellatif — AI &amp; Data Science Graduate</span>
+      <span class="mono footer-year">2026</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
