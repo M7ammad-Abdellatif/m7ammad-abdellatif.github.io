@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shipment Delay Intelligence — Mohammad Abdellatif</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #0a0a0b;
+      --bg-2:      #111113;
+      --bg-card:   #141416;
+      --border:    #222226;
+      --text:      #e8e8ea;
+      --text-muted:#888892;
+      --accent:    #00d4aa;
+      --accent-dim:#00d4aa22;
+      --white:     #ffffff;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --max-width: 860px;
+      --radius: 4px;
+      --transition: 0.25s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    .mono { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; }
+    .accent { color: var(--accent); }
+    .container { width: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0 32px; height: 64px; display: flex; align-items: center;
+      background: rgba(10,10,11,0.9); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { width: 100%; max-width: var(--max-width); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 500; color: var(--white); letter-spacing: 0.05em; transition: color var(--transition); }
+    .nav-logo:hover { color: var(--accent); }
+    .nav-back { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; transition: color var(--transition); display: flex; align-items: center; gap: 6px; }
+    .nav-back:hover { color: var(--accent); }
+
+    /* HERO */
+    .project-hero { padding: 120px 0 72px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px; opacity: 0.3;
+      mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, black 20%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, black 20%, transparent 80%);
+    }
+    .project-hero .container { position: relative; z-index: 1; }
+    .project-eyebrow { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .project-eyebrow-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
+    .project-eyebrow-sep { width: 32px; height: 1px; background: var(--border); }
+    .project-eyebrow-num { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.1em; }
+    .project-title { font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--white); margin-bottom: 20px; }
+    .project-summary { font-size: 1rem; color: var(--text-muted); margin-bottom: 28px; max-width: 560px; line-height: 1.65; }
+    .project-meta-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; }
+    .project-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag { font-family: var(--font-mono); font-size: 0.65rem; padding: 4px 10px; border: 1px solid var(--border); border-radius: 2px; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; }
+    .project-stack-inline { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); letter-spacing: 0.04em; }
+
+    /* MAIN CONTENT */
+    .project-body { padding: 72px 0 96px; }
+    .content-block { margin-bottom: 56px; opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .content-block.visible { opacity: 1; transform: translateY(0); }
+    .block-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 16px; display: block; }
+    .block-heading { font-size: 1.35rem; font-weight: 700; color: var(--white); letter-spacing: -0.02em; margin-bottom: 16px; line-height: 1.3; }
+    .block-text { color: var(--text-muted); font-size: 0.95rem; line-height: 1.85; }
+    .block-text p { margin-bottom: 16px; }
+    .block-text p:last-child { margin-bottom: 0; }
+    .divider { border: none; border-top: 1px solid var(--border); margin-bottom: 56px; }
+
+    /* STAT CARDS */
+    .stat-cards { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
+    .stat-card { flex: 1; min-width: 140px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+    .stat-value { font-size: 1.6rem; font-weight: 700; color: var(--accent); letter-spacing: -0.03em; font-family: var(--font-mono); }
+    .stat-label { font-size: 0.72rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; }
+
+    /* FEATURES CHIP */
+    .features-row { margin-top: 16px; padding: 14px 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+
+    /* PIPELINE */
+    .pipeline { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .pipeline-step { display: flex; align-items: flex-start; gap: 20px; padding: 20px 24px; border-bottom: 1px solid var(--border); transition: background var(--transition); }
+    .pipeline-step:last-child { border-bottom: none; }
+    .pipeline-step:hover { background: var(--accent-dim); }
+    .step-num { font-family: var(--font-mono); font-size: 0.68rem; color: var(--accent); letter-spacing: 0.08em; min-width: 28px; padding-top: 2px; }
+    .step-title { font-size: 0.9rem; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .step-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* CHART GALLERY */
+    .chart-grid { display: flex; flex-direction: column; gap: 24px; }
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color var(--transition);
+    }
+    .chart-card:hover { border-color: var(--accent); }
+    .chart-card-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chart-card-title { font-family: var(--font-mono); font-size: 0.72rem; color: var(--white); letter-spacing: 0.04em; }
+    .chart-card-tag { font-family: var(--font-mono); font-size: 0.62rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 8px; border: 1px solid var(--accent); border-radius: 2px; }
+    .chart-card-img { width: 100%; display: block; background: #fff; }
+    .chart-card-caption { padding: 14px 20px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; border-top: 1px solid var(--border); }
+
+    .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    /* TAKEAWAYS */
+    .takeaways { display: flex; flex-direction: column; gap: 12px; }
+    .takeaway-item { display: flex; gap: 14px; align-items: flex-start; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); transition: border-color var(--transition); }
+    .takeaway-item:hover { border-color: var(--accent); }
+    .takeaway-arrow { font-family: var(--font-mono); color: var(--accent); font-size: 0.9rem; padding-top: 2px; flex-shrink: 0; }
+    .takeaway-text { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* MODELING NOTE */
+    .modeling-note {
+      padding: 18px 22px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* DEMO BUTTON */
+    .demo-trigger-wrap { margin-top: 32px; }
+    .btn-demo {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 28px; background: var(--accent); color: #0a0a0b;
+      font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase; border: none;
+      border-radius: var(--radius); cursor: pointer;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .btn-demo:hover { background: #00f0c2; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,170,0.25); }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px); z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+      transform: translateY(16px); transition: transform 0.25s ease;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .modal-title { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
+    .modal-note { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.04em; margin-top: 4px; }
+    .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 4px; line-height: 1; transition: color var(--transition); }
+    .modal-close:hover { color: var(--white); }
+    .modal-body { padding: 28px 24px; }
+    .demo-field { margin-bottom: 20px; }
+    .demo-label { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; display: block; }
+    .demo-select {
+      width: 100%; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--text); font-family: var(--font-mono); font-size: 0.8rem; padding: 10px 14px;
+      cursor: pointer; outline: none; transition: border-color var(--transition); appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888892' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+    }
+    .demo-select:focus { border-color: var(--accent); }
+    .demo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .demo-input { width: 100%; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: var(--font-mono); font-size: 0.8rem; padding: 10px 14px; outline: none; transition: border-color var(--transition); }
+    .demo-input:focus { border-color: var(--accent); }
+    .btn-predict { width: 100%; padding: 13px; background: var(--accent); color: #0a0a0b; font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: var(--radius); cursor: pointer; transition: background var(--transition); margin-top: 4px; }
+    .btn-predict:hover { background: #00f0c2; }
+    .btn-predict:disabled { opacity: 0.4; cursor: not-allowed; }
+    .demo-result { margin-top: 20px; padding: 18px 20px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); display: none; }
+    .demo-result.visible { display: block; }
+    .result-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .result-row:last-child { margin-bottom: 0; }
+    .result-key { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+    .result-value { font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent); font-weight: 500; }
+    .demo-disclaimer { margin-top: 16px; font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-muted); text-align: center; letter-spacing: 0.03em; line-height: 1.6; }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(0,0,0,0.3); border-top-color: #0a0a0b; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* FOOTER */
+    .footer { padding: 32px 0; border-top: 1px solid var(--border); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); }
+
+    @media (max-width: 640px) {
+      .container { padding: 0 20px; }
+      .project-hero { padding: 100px 0 56px; }
+      .project-body { padding: 48px 0 72px; }
+      .demo-row { grid-template-columns: 1fr; }
+      .chart-row { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; gap: 8px; text-align: center; }
+    }
+
+    .overview-list {
+    margin-top: 16px;
+    padding-left: 0;
+    list-style: none;
+    }
+
+    .overview-list li {
+    margin-bottom: 10px;
+    padding-left: 20px; /* increase spacing */
+    position: relative;
+    color: var(--text);
+    }
+
+    .overview-list li::before {
+    content: "•";
+    position: absolute;
+    left: -5px; /* push it slightly left */
+    top: 0;
+    color: var(--accent-dim);
+    font-size: 18px;
+    }
+
+    .dataset-text {
+    max-width: 700px;
+    line-height: 1.7;
+    }
+
+    @media (max-width: 768px) {
+    .dataset-text {
+        max-width: 100%;
+    }
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">MO<span class="accent">.</span></a>
+      <a href="index.html#projects" class="nav-back mono">← Back to Projects</a>
+    </div>
+  </nav>
+
+  <section class="project-hero">
+    <div class="hero-grid-bg"></div>
+    <div class="container">
+      <div class="project-eyebrow">
+        <span class="project-eyebrow-label">Project 02</span>
+        <div class="project-eyebrow-sep"></div>
+        <span class="project-eyebrow-num mono">Big Data / Logistics Analytics</span>
+      </div>
+      <h1 class="project-title">Shipment Delay<br/>Intelligence System</h1>
+      <p class="project-summary">End-to-end analysis of 100K+ logistics shipments using PySpark — uncovering delay patterns across routes, transport modes, congestion levels, and departure timing.</p>
+      <div class="project-meta-row">
+        <div class="project-tags">
+          <span class="tag">Big Data</span>
+          <span class="tag">Analytics</span>
+          <span class="tag">PySpark</span>
+          <span class="tag">Logistics</span>
+        </div>
+        <span class="project-stack-inline mono">Python • Spark ML • Data Pipelines</span>
+      </div>
+      <div class="demo-trigger-wrap">
+        <button class="btn-demo" id="openDemo"><span>▶</span> Try Demo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO MODAL -->
+  <div class="modal-overlay" id="demoModal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Shipment Delay Estimator</div>
+          <div class="modal-note">Estimator based on learned patterns from the dataset</div>
+        </div>
+        <button class="modal-close" id="closeDemo">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="demo-field">
+          <label class="demo-label">Route</label>
+          <select class="demo-select" id="routeSelect">
+            <option value="DXB01-RUH05">Dubai → Riyadh</option>
+            <option value="DXB01-BAH12">Dubai → Bahrain</option>
+            <option value="JED20-DXB01">Jeddah → Dubai</option>
+            <option value="RUH05-JED20">Riyadh → Jeddah</option>
+          </select>
+        </div>
+        <div class="demo-field">
+          <label class="demo-label">Transport Mode</label>
+          <select class="demo-select" id="modeSelect">
+            <option value="TRUCK">Truck — highest volume</option>
+            <option value="AIR">Air — lowest avg delay</option>
+            <option value="VAN">Van</option>
+            <option value="SEA">Sea — highest avg delay</option>
+          </select>
+        </div>
+        <div class="demo-row">
+          <div>
+            <label class="demo-label">Origin Congestion (0–1)</label>
+            <input class="demo-input" type="number" id="congestionInput" min="0" max="1" step="0.1" value="0.5" />
+          </div>
+          <div>
+            <label class="demo-label">Departure Hour (0–23)</label>
+            <input class="demo-input" type="number" id="hourInput" min="0" max="23" value="8" />
+          </div>
+        </div>
+        <button class="btn-predict" id="predictBtn">Estimate Delay</button>
+        <div class="demo-result" id="demoResult">
+          <div class="result-row"><span class="result-key">Predicted Delay</span><span class="result-value" id="resultDelay">—</span></div>
+          <div class="result-row"><span class="result-key">Risk Level</span><span class="result-value" id="resultRisk">—</span></div>
+          <div class="result-row"><span class="result-key">Primary Driver</span><span class="result-value" id="resultDriver">—</span></div>
+        </div>
+        <div class="demo-disclaimer">Estimates derived from real route and timing patterns in the dataset.<br/>
+          (Not Live Inference)</div>
+      
+      </div>
+    </div>
+  </div>
+
+  <main class="project-body">
+    <div class="container">
+
+      <!-- Overview -->
+      <div class="content-block">
+        <span class="block-label">Overview</span>
+        <div class="block-text">
+          <p>
+            Logistics delays are difficult to diagnose — shipments can leave on time, pass through hubs, and still arrive late without a clear cause.
+            This system analyzes over 100,000 shipment records using PySpark to uncover what actually drives delays across a logistics network. 
+          </p>
+
+          <p>
+            The pipeline processes raw data at scale, applies transformations and aggregations, and surfaces patterns across routes, transport modes, congestion levels, and departure timing.
+            The analysis focuses on practical questions: which routes are consistently slower, how departure timing impacts delivery performance, and how congestion at origin hubs contributes to delays.
+          </p>
+
+            <p>The system focuses on identifying:</p>
+
+            <ul class="overview-list">
+            <li>Routes that consistently show higher delays</li>
+            <li>The impact of departure timing on delays</li>
+            <li>How congestion at origin hubs affects delivery performance</li>
+            </ul>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Dataset -->
+      <div class="content-block">
+        <span class="block-label">Dataset</span>
+        <h2 class="block-heading">Gulf Region Shipment Records</h2>
+        <div class="block-text">
+          <p>
+            The dataset contains shipment records across four major logistics hubs in the Gulf region —
+            Dubai (DXB01), Riyadh (RUH05), Jeddah (JED20), and Bahrain (BAH12) — covering operations throughout 2024.
+            
+            Each record captures the full journey: planned vs. actual departure and arrival, route, transport mode, cargo characteristics,
+            and live congestion indices for both origin and destination hubs.
+          </p>
+        </div>
+        <div class="stat-cards">
+          <div class="stat-card"><div class="stat-value">100K</div><div class="stat-label">Shipment Records</div></div>
+          <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Logistics Hubs</div></div>
+          <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Route Corridors</div></div>
+          <div class="stat-card"><div class="stat-value">29</div><div class="stat-label">Features</div></div>
+        </div>
+        <div class="features-row" style="margin-top:16px;">
+          <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Key Features: </span>
+          <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);">route_id · transport_mode · distance_km · delay_minutes · origin_congestion_idx · dest_congestion_idx · planned_transit_hours · vehicle_reliability · product_weight_kg · fragile · scheduled_departure</span>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Pipeline -->
+      <div class="content-block">
+        <span class="block-label">Pipeline</span>
+        <h2 class="block-heading">Ingest → Clean → Aggregate → Visualize</h2>
+        <div class="block-text" style="margin-bottom:24px;">
+          <p>Everything runs through a single PySpark session, keeping compute distributed from ingestion through aggregation. Pandas only enters the picture at visualization time, after Spark has already done the heavy lifting.</p>
+        </div>
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <span class="step-num">01</span>
+            <div class="step-content">
+              <div class="step-title">Ingestion & Schema Inspection</div>
+              <div class="step-desc">Raw CSV loaded into PySpark with automatic schema inference. Schema printed and validated — 29 columns, 100,000 rows confirmed before any transformation begins.</div>
+            </div>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-num">02</span>
+            <div class="step-content">
+              <div class="step-title">Null Treatment & Deduplication</div>
+              <div class="step-desc">Per-column null sweep using a cast-to-int aggregation pattern. 446 rows dropped on critical fields (delay_minutes, actual_departure, actual_arrival, product_weight_kg, fragile). Zero duplicates found across all 100K records.</div>
+            </div>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-num">03</span>
+            <div class="step-content">
+              <div class="step-title">Feature Engineering & Column Pruning</div>
+              <div class="step-desc">11 redundant geo and label columns dropped. Scheduled departure parsed from string to timestamp, then departure hour extracted as a derived numeric feature using <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);">F.hour()</span>.</div>
+            </div>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-num">04</span>
+            <div class="step-content">
+              <div class="step-title">Aggregation & Pattern Analysis</div>
+              <div class="step-desc">GroupBy aggregations across four dimensions: origin congestion index, transport mode, departure hour, and route. Each slice computed avg delay and shipment count. Severely delayed shipments (&gt;60 min) analyzed separately per mode.</div>
+            </div>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-num">05</span>
+            <div class="step-content">
+              <div class="step-title">Visualization</div>
+              <div class="step-desc">Aggregated DataFrames pulled into Pandas via <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);">.toPandas()</span>. Line plots for trend analysis, bar charts for categorical comparisons — all built with Matplotlib and Seaborn.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Visuals -->
+      <div class="content-block">
+        <span class="block-label">Analysis & Visualizations</span>
+        <h2 class="block-heading">What the data showed</h2>
+        <div class="block-text" style="margin-bottom:32px;">
+          <p>Four analyses were run across the cleaned dataset, each targeting a different dimension of delay. All aggregations ran on PySpark before being passed to Matplotlib/Seaborn for plotting.</p>
+        </div>
+
+        <div class="chart-grid">
+
+          <!-- Chart 1: Congestion -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Average Delay vs. Origin Congestion Index</span>
+              <span class="chart-card-tag">Trend</span>
+            </div>
+            <img class="chart-card-img" src="assets/Images/Average Delay vs Congestion.png" alt="Delay vs Congestion">
+            <div class="chart-card-caption">
+              A clear upward trend emerges as congestion rises — from ~20–35 min at low levels (0.0–0.2) to ~50–55 min at the high end (0.8–1.0). The mid-range shows noise, suggesting congestion interacts with route-level factors rather than acting alone.
+            </div>
+          </div>
+
+          <!-- Charts 2 & 3: Side by side -->
+          <div class="chart-row">
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <span class="chart-card-title">Avg Delay by Transport Mode</span>
+                <span class="chart-card-tag">Comparison</span>
+              </div>
+              <img class="chart-card-img" src="assets/Images/Average Delay by Transport Mode.png" alt="Delay vs Congestion">
+              <div class="chart-card-caption">
+                Sea freight shows the highest average delay (~43.8 min), followed by Van (40.2), Truck (38.0), and Air (34.1). The ~10-minute spread highlights a clear performance gap across transport modes.
+              </div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <span class="chart-card-title">Shipment Volume by Mode</span>
+                <span class="chart-card-tag">Volume</span>
+              </div>
+              <img class="chart-card-img" src="assets/Images/Shipment Volume by Tranport Mode.png" alt="Delay vs Congestion">
+              <div class="chart-card-caption">
+                Truck dominates at 88K of 99.5K shipments. Van, Air, and Sea are minor channels — making truck operations the main driver of network-wide delay behavior.
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart 4: Departure Hour -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Average Delay by Departure Hour</span>
+              <span class="chart-card-tag">Temporal</span>
+            </div>
+            <img class="chart-card-img" src="assets/Images/Average Delay by Departure Hour.png" alt="Delay vs Congestion">
+            <div class="chart-card-caption">
+              Two peaks emerge: morning (8–9am, ~43 min) and mid-afternoon (15–16h, ~41 min). Late-night and early-morning departures (0–5am) show the lowest delays (~29–32 min). This suggests peak-hour congestion at hubs drives delays — making departure timing one of the most actionable levers.
+            </div>
+          </div>
+
+          <!-- Chart 5: Route -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Average Delay by Route</span>
+              <span class="chart-card-tag">Route Analysis</span>
+            </div>
+            <img class="chart-card-img" src="assets/Images/Average Delay by Route.png" alt="Delay vs Congestion">
+            <div class="chart-card-caption">
+              DXB01–RUH05 is the worst-performing route (~43.4 min), with DXB01–BAH12 and JED20–DXB01 close behind (~42–41.5 min). RUH05–JED20 is a clear outlier in the opposite direction (~24.8 min), showing nearly half the delay — a structural difference, not random variation.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Modeling note -->
+      <div class="content-block">
+        <span class="block-label">Predictive Modeling</span>
+        <div class="modeling-note">
+            Three regression models were trained to predict shipment delay: Linear Regression, Random Forest, and Gradient Boosted Trees.
+            The full ML pipeline included StringIndexer, OneHotEncoder, VectorAssembler, and StandardScaler stages chained into a Pipeline object.
+            Gradient Boosted Trees performed best, capturing non-linear relationships across route, timing, and congestion features.
+
+            <ul class="overview-list">
+            <li>StringIndexer — converts categorical labels into indexed numerical form</li>
+            <li>OneHotEncoder — expands categorical variables into sparse binary vectors</li>
+            <li>VectorAssembler — combines all features into a single feature vector</li>
+            <li>StandardScaler — normalizes feature scales for stable model training</li>
+            </ul>
+
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Takeaways -->
+      <div class="content-block">
+        <span class="block-label">What I took from this</span>
+        <div class="takeaways">
+          <div class="takeaway-item">
+            <span class="takeaway-arrow">→</span>
+            <span class="takeaway-text">Working with PySpark at 100K rows forced a different mental model than pandas. Instead of inspecting rows, you design transformations and reason about outputs before they materialize. That shift takes time to internalize.</span>
+          </div>
+          <div class="takeaway-item">
+            <span class="takeaway-arrow">→</span>
+            <span class="takeaway-text">The departure hour finding was the most surprising. A 10+ minute difference in average delay between 8am and 2am departures, consistent across the full year, is the kind of pattern that gets lost in aggregate statistics but is immediately actionable for a scheduling team.</span>
+          </div>
+          <div class="takeaway-item">
+            <span class="takeaway-arrow">→</span>
+            <span class="takeaway-text">The RUH05–JED20 route's performance gap (24.8 vs. 43+ min on every other corridor) raises a real question — whether it's distance, hub characteristics, or something else driving it. The data shows the pattern clearly; explaining the mechanism would need additional operational context.</span>
+          </div>
+          <div class="takeaway-item">
+            <span class="takeaway-arrow">→</span>
+            <span class="takeaway-text">Building the MLlib pipeline — chaining indexers, encoders, assemblers, and scalers into a single Pipeline — showed how Spark structures ML workflows differently from scikit-learn. More verbose, but built to scale.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="mono">AI &amp; Data Science Graduate</span>
+      <span class="mono">© 2026 Mohammad Abdellatif</span>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.content-block').forEach(el => observer.observe(el));
+
+    // Modal
+    const overlay = document.getElementById('demoModal');
+    const openBtn = document.getElementById('openDemo');
+    const closeBtn = document.getElementById('closeDemo');
+    const predictBtn = document.getElementById('predictBtn');
+    const demoResult = document.getElementById('demoResult');
+
+    function openModal() { overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeModal() { overlay.classList.remove('open'); document.body.style.overflow = ''; }
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    const routeDelays = { 'DXB01-RUH05': 43.4, 'DXB01-BAH12': 42.4, 'JED20-DXB01': 41.5, 'RUH05-JED20': 24.8 };
+    const modeFactors = { 'TRUCK': 0.0, 'AIR': -3.9, 'VAN': 2.2, 'SEA': 5.8 };
+
+    predictBtn.addEventListener('click', () => {
+      predictBtn.disabled = true;
+      predictBtn.innerHTML = '<span class="spinner"></span>Running...';
+      demoResult.classList.remove('visible');
+
+      setTimeout(() => {
+        const route = document.getElementById('routeSelect').value;
+        const mode = document.getElementById('modeSelect').value;
+        const congestion = parseFloat(document.getElementById('congestionInput').value) || 0.5;
+        const hour = parseInt(document.getElementById('hourInput').value) || 8;
+
+        let base = routeDelays[route] || 38;
+        base += modeFactors[mode] || 0;
+        base += congestion * 18;
+        const morningPeak = (hour >= 7 && hour <= 9);
+        const afternoonPeak = (hour >= 15 && hour <= 16);
+        if (morningPeak || afternoonPeak) base += 8;
+        else if (hour >= 0 && hour <= 5) base -= 7;
+        base += (Math.random() - 0.5) * 6;
+        const predicted = Math.max(5, Math.round(base));
+
+        let driver = congestion > 0.6 ? 'High origin congestion' : morningPeak ? 'Morning departure peak' : afternoonPeak ? 'Afternoon departure peak' : 'Route baseline';
+        let risk = predicted > 60 ? 'High' : predicted > 35 ? 'Medium' : 'Low';
+        const riskColor = predicted > 60 ? '#e8574a' : predicted > 35 ? '#e8c57a' : 'var(--accent)';
+
+        document.getElementById('resultDelay').textContent = predicted + ' min';
+        document.getElementById('resultRisk').textContent = risk;
+        document.getElementById('resultRisk').style.color = riskColor;
+        document.getElementById('resultDriver').textContent = driver;
+
+        demoResult.classList.add('visible');
+        predictBtn.disabled = false;
+        predictBtn.innerHTML = 'Estimate Delay';
+      }, 1200);
+    });
+  </script>
+</body>
+</html>

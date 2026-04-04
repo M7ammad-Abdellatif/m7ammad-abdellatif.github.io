@@ -100,88 +100,83 @@
       <div class="projects-grid">
 
         <!-- Project 1 -->
-        <article class="project-card reveal">
+        <a href="project1.html" class="project-card reveal project-card-link">
           <div class="project-top">
             <span class="project-number mono">01</span>
             <div class="project-tags">
-              <span class="tag">AI</span>
-              <span class="tag">NLP</span>
+              <span class="tag">ML</span>
+              <span class="tag">Computer Vision</span>
             </div>
           </div>
-          <h3 class="project-title">SentimentScope</h3>
+          <h3 class="project-title">Tomato Leaf Disease Classifier</h3>
           <p class="project-desc">
-            Fine-tuned a BERT-based transformer model on Arabic and English social media data
-            to classify sentiment in mixed-language posts. Addressed the unique challenge of
-            code-switching in Jordanian Arabic dialect — a gap in most existing NLP tools.
+            Built a CNN (AlexNet-based) model to classify tomato leaf diseases from images.
+            Connected it to a simple web interface where users can upload an image and get a prediction.
           </p>
           <div class="project-tools">
-            <span class="mono tool">Python</span>
-            <span class="mono tool">HuggingFace</span>
             <span class="mono tool">PyTorch</span>
-            <span class="mono tool">FastAPI</span>
+            <span class="mono tool">CNN</span>
+            <span class="mono tool">Flask</span>
           </div>
           <div class="project-result">
             <span class="mono accent">→</span>
-            <span>89% accuracy on held-out test set; deployed as a REST API</span>
+            <span>Deployable inference pipeline — upload an image and receive predictions through a web interface.</span>
           </div>
-          <a href="#" class="project-link mono">View Project ↗</a>
-        </article>
+          <span class="project-link mono">View Project ↗</span>
+        </a>
 
         <!-- Project 2 -->
-        <article class="project-card reveal">
+        <a href="project2.html" class="project-card reveal project-card-link">
           <div class="project-top">
             <span class="project-number mono">02</span>
             <div class="project-tags">
-              <span class="tag">Data</span>
-              <span class="tag">Analysis</span>
+              <span class="tag">Big Data</span>
+              <span class="tag">Logistics</span>
             </div>
           </div>
-          <h3 class="project-title">JobMarket Pulse</h3>
+          <h3 class="project-title">Shipment Delay Intelligence System</h3>
           <p class="project-desc">
-            Scraped and analyzed 15,000+ tech job listings from the MENA region to uncover
-            demand patterns for AI and data roles. Built an interactive dashboard revealing
-            skill gaps between what universities teach and what the market actually needs.
+          Built a PySpark-based logistics analytics system on 100K+ shipment records to uncover delay patterns across routes,
+          transport modes, congestion levels, and departure timing.
           </p>
           <div class="project-tools">
-            <span class="mono tool">Python</span>
-            <span class="mono tool">Pandas</span>
-            <span class="mono tool">Plotly</span>
-            <span class="mono tool">BeautifulSoup</span>
+            <span class="mono tool">PySpark</span>
+            <span class="mono tool">SparkML</span>
+            <span class="mono tool">Distributed Computing</span>
           </div>
           <div class="project-result">
             <span class="mono accent">→</span>
-            <span>Presented to 3 university faculty members; influenced course update discussion</span>
+            <span>Revealed actionable delay drivers across route, time, and congestion dimensions</span>
           </div>
-          <a href="#" class="project-link mono">View Project ↗</a>
-        </article>
+          <span class="project-link mono">View Project ↗</span>
+        </a>
 
         <!-- Project 3 -->
-        <article class="project-card reveal">
+        <a href="project3.html" class="project-card reveal project-card-link">
           <div class="project-top">
             <span class="project-number mono">03</span>
             <div class="project-tags">
-              <span class="tag">ML</span>
+              <span class="tag">Methodical</span>
               <span class="tag">Real-World</span>
+              <span class="tag">IMD</span>
             </div>
           </div>
-          <h3 class="project-title">SmartSched</h3>
+          <h3 class="project-title">Student Outcome Analyzer</h3>
           <p class="project-desc">
-            Built a constraint-based scheduling optimizer for university course registration
-            that reduces conflicts and maximizes student preferences. Used a genetic algorithm
-            approach combined with a simple web interface for easy input.
+            Built a data-driven system combining survey insights with a large academic dataset to identify
+            key drivers of student performance and predict risk.
           </p>
           <div class="project-tools">
-            <span class="mono tool">Python</span>
-            <span class="mono tool">DEAP</span>
-            <span class="mono tool">Flask</span>
-            <span class="mono tool">SQLite</span>
+            <span class="mono tool">Survey</span>
+            <span class="mono tool">Behavioral</span>
+            <span class="mono tool">Analysis</span>
           </div>
           <div class="project-result">
             <span class="mono accent">→</span>
-            <span>Reduced scheduling conflicts by 74% vs. manual process in pilot test</span>
+            <span>Identified key factors influencing performance across behavior, background, and context.</span>
           </div>
-          <a href="#" class="project-link mono">View Project ↗</a>
-        </article>
+          <span class="project-link mono">View Project ↗</span>
+        </a>
 
       </div>
     </div>
@@ -222,6 +217,7 @@
             <li class="skill-item"><span class="skill-dot"></span>scikit-learn</li>
             <li class="skill-item"><span class="skill-dot"></span>Matplotlib / Plotly</li>
             <li class="skill-item"><span class="skill-dot"></span>PyTorch / TensorFlow</li>
+            <li class="skill-item"><span class="skill-dot"></span>PySpark</li>
           </ul>
         </div>
 
@@ -278,8 +274,8 @@
   <!-- ===================== FOOTER ===================== -->
   <footer class="footer">
     <div class="container footer-inner">
-      <span class="mono">Mohammad Abdellatif — AI &amp; Data Science Graduate</span>
-      <span class="mono footer-year">2026</span>
+      <span class="mono">AI &amp; Data Science Graduate</span>
+      <span class="mono footer-year">© 2026 Mohammad Abdellatif</span>
     </div>
   </footer>
 
